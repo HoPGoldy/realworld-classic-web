@@ -8,7 +8,7 @@ function App() {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/home" component={Home} />
-        <Redirect from="/" to="/home/globalFeed" />
+        <Redirect from="/" to="/home" />
       </Switch>
     </div>
   );

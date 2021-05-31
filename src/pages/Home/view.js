@@ -1,32 +1,23 @@
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import GlobalFeed from './components/GlobalFeed/views'
+import ArticleList from './components/ArticleList/views'
 import api from '@/api';
 import './styles.css';
-
-const renderTag = function (tag) {
-    const to = {
-        pathname: '/home/globalFeed',
-        search: `?tag=${tag}`
-    }
-    return (
-        <>
-            <Link key={tag} to={to}>{tag}</Link>
-            &nbsp;&nbsp;
-        </>
-    )
-}
+import renderTag from '@/components/renderTag';
 
 const Home = function () {
     const [tags, setTags] = useState([]);
-
     const fetchTags = async () => {
         const resp = await api.get('/tags');
         if (!resp.data) return;
         setTags(resp.data.tags);
     }
 
-    useEffect(() => { fetchTags() }, []);
+    useEffect(() => {
+        fetchTags();
+    }, []);
+
+    
 
     return (
         <div>
@@ -50,14 +41,11 @@ const Home = function () {
 
                 <br /><br />
                 <b>Views: </b>
-                <Link to="/home/globalFeed">global feed</Link>
+                <Link to="/home">global feed</Link>
             </nav>
+
+            <ArticleList />
             
-            <section>  
-                <Switch>
-                    <Route path="/home/globalFeed" component={GlobalFeed} />
-                </Switch>
-            </section>
         </div>
     );
 }
