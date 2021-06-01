@@ -1,0 +1,15 @@
+.footer {
+    border-top: #000 1px solid;
+    border-bottom: #000 1px solid;
+    background-color: #E5EFF7;
+    padding-left: 12px;
+    margin: 16px 0px;
+    padding: 12px 0px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.footer b {
+    margin: 0px 12px;
+}

@@ -1,12 +1,17 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import ArticleList from './components/ArticleList/views'
+import ArticleList from '@/components/ArticleList';
 import api from '@/api';
-import './styles.css';
+import '@/common.css';
 import renderTag from '@/components/renderTag';
+import PageTitle from '@/components/PageTitle';
+import useLocation from '@/components/useLocation';
 
 const Home = function () {
     const [tags, setTags] = useState([]);
+    const location = useLocation();
+    const { tag, page = 0 } = location.query;
+
     const fetchTags = async () => {
         const resp = await api.get('/tags');
         if (!resp.data) return;
@@ -17,35 +22,23 @@ const Home = function () {
         fetchTags();
     }, []);
 
-    
-
     return (
         <div>
-            <header className="header-area">
-                <b><Link to="/">conduit</Link></b>
-                <div>
-                    <Link to="/">Home</Link>&nbsp;|&nbsp;
-                    <Link to="/login">Sign in</Link>&nbsp;|&nbsp;
-                    <Link to="/register">Sign up</Link>
-                </div>
-            </header>
-            <div className="big-title">
-                <h1>Conduit</h1>
-                <p>A place to share your knowledge.</p>
-            </div>
+            <PageTitle title="Conduit" summary="A place to share your knowledge."/>
 
             <nav>
                 <br />
-                <b>Popular Tags: </b>
-                {tags.map(renderTag)}
+                <div className="flex-wrap">
+                    <b>Popular Tags: </b>{tags.map(renderTag)}
+                </div>
 
-                <br /><br />
+                <br />
                 <b>Views: </b>
-                <Link to="/home">global feed</Link>
+                <Link to="/home">global feed</Link>&nbsp;&nbsp;
+                {tag && <Link to={`/home?tag=${tag}`}>#{tag}</Link>}
             </nav>
 
-            <ArticleList />
-            
+            <ArticleList tag={tag} page={page}/>
         </div>
     );
 }
