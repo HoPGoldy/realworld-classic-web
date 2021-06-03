@@ -1,9 +1,14 @@
 import './App.css';
+import { useContext } from 'react';
 import { Home, Login, Article, User } from './pages';
 import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import { footer } from '@/components/Footer/view';
+import { userContext } from '@/components/userContext';
 
 function App() {
+  const [userInfo] = useContext(userContext);
+  console.log('🚀 ~ file: App.js ~ line 9 ~ App ~ userInfo', userInfo)
+
   return (
     <div>
       <header className="header-area">
