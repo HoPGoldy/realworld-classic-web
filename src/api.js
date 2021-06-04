@@ -1,7 +1,24 @@
 import axios from 'axios';
+import history from './router';
 
-const api = axios.create({
-    baseURL: 'https://conduit.productionready.io/api/'
-});
+export const setToken = newToken => {
+    if (!newToken) delete axios.defaults.headers.common.authorization;
+    else axios.defaults.headers.common.authorization = `Token ${newToken}`;
+}
 
-export default api;
+axios.defaults.baseURL = 'https://conduit.productionready.io/api/';
+
+axios.interceptors.response.use(
+    resp => resp.data,
+    error => {
+        if (error.response.status === 401) {
+            history.push('/login');
+            setToken(undefined);
+            localStorage.removeItem('token');
+        }
+
+        throw error;
+    }
+);
+
+export default axios;

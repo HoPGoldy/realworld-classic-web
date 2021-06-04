@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import PageTitle from '@/components/PageTitle';
 import api from '@/api';
 import '@/common.css';
@@ -16,9 +16,9 @@ const Article = function () {
     const [articleComments, setArticleComments] = useState([]);
 
     const fetchAtriclDetail = async () => {
-        const resp = await api.get(`/articles/${id}`);
+        const data = await api.get(`/articles/${id}`);
 
-        const detail = resp.data.article;
+        const detail = data.article;
         detail.createTime = dayjs(detail.createdAt).format('YYYY-MM-DD HH:mm:ss');
         detail.updateTime = dayjs(detail.updatedAt).format('YYYY-MM-DD HH:mm:ss');
 
@@ -26,9 +26,9 @@ const Article = function () {
     }
 
     const fetchAtriclComment = async () => {
-        const resp = await api.get(`/articles/${id}/comments`);
+        const data = await api.get(`/articles/${id}/comments`);
 
-        const comments = resp.data.comments.map(comment => ({
+        const comments = data.comments.map(comment => ({
             ...comment,
             createTime: dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')
         }));
@@ -53,8 +53,8 @@ const Article = function () {
             <b>Description: </b>{description}
 
             <br /><br />
-            <b>Author: </b> {author.username}&nbsp;
-            <a href={author.image} target="__blank" title="see avatar">☻</a>
+            <b>Author: </b> <Link to={`/user/${author.username}`}>{author.username}</Link>&nbsp;
+            <a href={author.image} target="__blank" title="see avatar">⚅</a>
 
             <br /><br />
             <b>Created at: </b>{createTime}

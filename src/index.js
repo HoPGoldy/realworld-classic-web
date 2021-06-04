@@ -2,14 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { LoginProvider } from '@/components/userContext';
+import history from './router';
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router history={history}>
     <LoginProvider>
       <App />
     </LoginProvider>
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('root')
 );

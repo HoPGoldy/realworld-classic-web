@@ -1,5 +1,6 @@
 
 import { Link, useParams, useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
 import '@/common.css';
 import PageTitle from '@/components/PageTitle';
 import ArticleList from '@/components/ArticleList';
@@ -16,11 +17,12 @@ const User = function () {
     const { page } = location.query;
     const history = useHistory();
 
-    // 当前没有 tab 选中或者选中了未知的 tab，重定向
-    if (!tab || !TAB.find(({ key }) => key === tab)) {
-        history.replace(`/user/${username}/${TAB[0].key}`);
-        return 'redirecting...';
-    }
+    useEffect(() => {
+        // 当前没有 tab 选中或者选中了未知的 tab，重定向
+        if (!tab || !TAB.find(({ key }) => key === tab)) {
+            history.replace(`/user/${username}/${TAB[0].key}`);
+        }
+    }, [tab])
 
     return (
         <div>
