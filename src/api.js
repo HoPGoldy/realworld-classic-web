@@ -16,6 +16,9 @@ axios.interceptors.response.use(
             setToken(undefined);
             localStorage.removeItem('token');
         }
+        else if (error.response.status === 404) {
+            history.push('/home');
+        }
 
         throw error;
     }

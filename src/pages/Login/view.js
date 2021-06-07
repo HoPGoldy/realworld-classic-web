@@ -5,10 +5,11 @@ import { createForm } from 'rc-form';
 import { userContext } from '@/components/userContext';
 import PageTitle from '@/components/PageTitle';
 import api, { setToken } from '@/api';
+import ApiError from '@/components/ApiError';
 
 const Login = function (props) {
     const { form: { getFieldProps, getFieldError, resetFields } } = props;
-    const [errorMsg, setErrorMsg] = useState([]);
+    const [errorMsg, setErrorMsg] = useState(undefined);
     const [userInfo, setUserInfo] = useContext(userContext);
     const history = useHistory();
     const location = useLocation();
@@ -19,7 +20,7 @@ const Login = function (props) {
 
     const onSubmit = async () => {
         const user = await props.form.validateFields();
-        setErrorMsg([]);
+        setErrorMsg(undefined);
 
         try {
             const url = isLoginPage() ? 'users/login' : 'users';
@@ -33,7 +34,7 @@ const Login = function (props) {
         }
         catch (e) {
             console.error(e.response.data.errors);
-            setErrorMsg(Object.entries(e.response.data.errors).map(line => line.join(' ')));
+            setErrorMsg(e.response.data.errors);
         }
     }
 
@@ -53,9 +54,6 @@ const Login = function (props) {
         resetFields();
     }, [location.pathname])
 
-    const errorContent = errorMsg.length <= 0 ? null :
-        (<>{errorMsg.map(error => <div className="error" key={error}>{error}</div>)}</>)
-
     const titleContent = isLoginPage() ?
         <PageTitle title="Sign in" summary={() => <Link to="/register">Need an account?</Link>}/> :
         <PageTitle title="Sign up" summary={() => <Link to="/login">Have an account?</Link>}/>;
@@ -65,7 +63,7 @@ const Login = function (props) {
             {titleContent}
             
             <form>
-                {errorContent}
+                <ApiError errorMsg={errorMsg} />
                 
                 {!isLoginPage() && renderField('Username', 'username')}
                 {renderField('Email', 'email')}

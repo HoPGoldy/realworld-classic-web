@@ -19,3 +19,23 @@ form .error {
 form button {
     margin-top: 14px;
 }
+
+@media (max-width: 767px) {
+    form {
+        width: calc(100% - 20px);
+    }
+    form input, form textarea {
+        width: 100%;
+    }
+}
+
+@media (min-width: 767px) {
+    form input, form textarea {
+        width: 260px;
+    }
+}
+
+.link-btn {
+    cursor: pointer;
+    color: #0000EE;
+}

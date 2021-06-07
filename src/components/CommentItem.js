@@ -10,8 +10,7 @@ const CommentItem = function (props) {
 
             <ul>
                 <li>
-                    <b>Author:</b> {author.username}&nbsp;
-                    <a href={author.image} target="__blank" title="see avatar">☻</a>
+                    <b>Author:</b> {author.username}
                 </li>
 
                 <li><b>Update at:</b> {createTime}</li>

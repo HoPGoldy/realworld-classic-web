@@ -1,9 +1,10 @@
 import "./App.css";
 import { useContext, useEffect } from "react";
-import { Home, Login, Article, User } from "./pages";
+import { Home, Login, Article, User, EditArtcle, Profile } from "./pages";
 import { Route, Switch, Redirect, Link } from "react-router-dom";
 import { footer } from "@/components/Footer/view";
 import { userContext } from "@/components/userContext";
+import Separator from "@/components/Separator";
 import api, { setToken } from "@/api";
 
 function App() {
@@ -29,16 +30,20 @@ function App() {
             <header className="header-area">
                 <b><Link to="/">conduit</Link></b>
                 <div>
-                    <Link to="/">Home</Link>&nbsp;|&nbsp;
+                    <Link to="/">Home</Link>
+                    <Separator />
                     {userInfo ? (
                         <>
-                            <Link to="/login">New Article</Link>&nbsp;|&nbsp;
-                            <Link to="/register">Setting</Link>&nbsp;|&nbsp;
-                            <Link to="/login">{userInfo.username}</Link>
+                            <Link to="/editor">New Article</Link>
+                            <Separator />
+                            <Link to="/settings">Setting</Link>
+                            <Separator />
+                            <Link to={`/user/${userInfo.username}`}>{userInfo.username}</Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/login">Sign in</Link>&nbsp;|&nbsp;
+                            <Link to="/login">Sign in</Link>
+                            <Separator />
                             <Link to="/register">Sign up</Link>
                         </>
                     )}
@@ -49,10 +54,9 @@ function App() {
                 <Route path={["/register", "/login"]} component={Login} />
                 <Route path="/home" component={Home} />
                 <Route path="/article/:id" component={Article} />
-                <Route
-                    path={["/user/:username/:tab", "/user/:username"]}
-                    component={User}
-                />
+                <Route path={["/editor/:id", "/editor"]} component={EditArtcle} />
+                <Route path="/settings" component={Profile} />
+                <Route path={["/user/:username/:tab", "/user/:username"]} component={User} />
                 <Redirect from="/" to="/home" />
             </Switch>
 
