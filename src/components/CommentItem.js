@@ -1,18 +1,28 @@
-import '@/common.css';
+import api from '@/plugins/api';
 
 const CommentItem = function (props) {
-    // console.log('🚀 ~ file: view.js ~ line 4 ~ FeedItem ~ props', props)
-    const { author, createTime, body } = props;
+    const { author, createTime, body, currentUserName, id, article: { slug }, onDelete } = props;
+
+    const onDeleteComment = async () => {
+        await api.delete(`/articles/${slug}/comments/${id}`)
+        onDelete();
+    }
+
+    let deleteContent = null;
+    if (currentUserName === author.username) {
+        deleteContent = (
+            <span className="link-btn" style={{ color: 'red' }} onClick={onDeleteComment}>
+                ❌ Delete Comment
+            </span>
+        );
+    }
 
     return (
         <li>
-            <p>{body}</p>
+            <p>{body} {deleteContent}</p>
 
             <ul>
-                <li>
-                    <b>Author:</b> {author.username}
-                </li>
-
+                <li><b>Author:</b> {author.username}</li>
                 <li><b>Update at:</b> {createTime}</li>
             </ul>
         </li>

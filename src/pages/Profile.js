@@ -1,11 +1,9 @@
 import { useHistory } from 'react-router-dom';
-import PageTitle from '@/components/PageTitle';
-import api from '@/api';
-import '@/common.css';
+import { PageTitle, ApiError } from '@/components';
+import api from '@/plugins/api';
 import { createForm } from 'rc-form';
 import { useState, useContext } from 'react';
-import { userContext } from '@/components/userContext';
-import ApiError from '@/components/ApiError';
+import { userContext } from '@/plugins/userContext';
 
 /**
  * 文章正文页面

@@ -1,14 +1,10 @@
 
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
-import '@/common.css';
-import PageTitle from '@/components/PageTitle';
-import ArticleList from '@/components/ArticleList';
-import useLocation from '@/components/useLocation';
-import useUserInfo from '@/components/useUserInfo';
-import FollowButton from '@/components/FollowButton';
-import Separator from '@/components/Separator';
-import { userContext } from '@/components/userContext';
+import { useState, useEffect, useContext } from 'react';
+import { PageTitle, ArticleList, FollowButton, Separator } from '@/components';
+import useLocation from '@/plugins/useLocation';
+import { userContext } from '@/plugins/userContext';
+import api from '@/plugins/api';
 
 const User = function () {
     const TAB = [
@@ -17,7 +13,7 @@ const User = function () {
     ]
 
     const { username, tab } = useParams();
-    const [userInfo, setUserInfo] = useUserInfo(username);
+    const [userInfo, setUserInfo] = useState({});
     const location = useLocation();
     const { page } = location.query;
     const history = useHistory();
@@ -29,7 +25,16 @@ const User = function () {
             history.replace(`/user/${username}/${TAB[0].key}`);
             return 'Redirecting...';
         }
-    }, [tab])
+    }, [tab]);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            const data = await api.get(`/profiles/${username}`)
+            setUserInfo(data.profile)
+        }
+
+        fetchUserInfo();
+    }, [username]);
 
     // 是否为自己编辑
     const isMyself = selfInfo ? selfInfo.username === username : undefined;

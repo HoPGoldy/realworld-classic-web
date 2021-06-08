@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import mergeQuery from '@/components/mergeQuery';
+import mergeQuery from '@/plugins/mergeQuery';
 
 const Pagination = function (props) {
     const { total, size = 10 } = props;

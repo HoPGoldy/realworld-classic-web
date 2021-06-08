@@ -1,16 +1,14 @@
-import '@/common.css';
 import { useState, useContext, useEffect } from 'react';
 import { useHistory, Link, useLocation } from 'react-router-dom';
 import { createForm } from 'rc-form';
-import { userContext } from '@/components/userContext';
-import PageTitle from '@/components/PageTitle';
-import api, { setToken } from '@/api';
-import ApiError from '@/components/ApiError';
+import { userContext } from '@/plugins/userContext';
+import { PageTitle, ApiError } from '@/components';
+import api, { setToken } from '@/plugins/api';
 
 const Login = function (props) {
     const { form: { getFieldProps, getFieldError, resetFields } } = props;
     const [errorMsg, setErrorMsg] = useState(undefined);
-    const [userInfo, setUserInfo] = useContext(userContext);
+    const [setUserInfo] = useContext(userContext);
     const history = useHistory();
     const location = useLocation();
 

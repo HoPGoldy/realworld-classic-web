@@ -1,5 +1,5 @@
 import axios from 'axios';
-import history from './router';
+import history from './history';
 
 export const setToken = newToken => {
     if (!newToken) delete axios.defaults.headers.common.authorization;

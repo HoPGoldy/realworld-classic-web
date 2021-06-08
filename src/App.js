@@ -1,11 +1,9 @@
-import "./App.css";
 import { useContext, useEffect } from "react";
 import { Home, Login, Article, User, EditArtcle, Profile } from "./pages";
 import { Route, Switch, Redirect, Link } from "react-router-dom";
-import { footer } from "@/components/Footer/view";
-import { userContext } from "@/components/userContext";
-import Separator from "@/components/Separator";
-import api, { setToken } from "@/api";
+import { Separator, footer } from "@/components";
+import { userContext } from "@/plugins/userContext";
+import api, { setToken } from "@/plugins/api";
 
 function App() {
     const [userInfo, setUserInfo] = useContext(userContext);
@@ -27,7 +25,7 @@ function App() {
 
     return (
         <div>
-            <header className="header-area">
+            <header className="header-area flex-wrap">
                 <b><Link to="/">conduit</Link></b>
                 <div>
                     <Link to="/">Home</Link>

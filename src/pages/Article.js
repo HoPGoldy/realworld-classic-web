@@ -1,15 +1,10 @@
 import { useParams, Link, useHistory } from 'react-router-dom';
 import PageTitle from '@/components/PageTitle';
-import api from '@/api';
-import '@/common.css';
+import api from '@/plugins/api';
 import { useState, useEffect, useContext } from 'react';
-import { userContext } from '@/components/userContext';
+import { userContext } from '@/plugins/userContext';
 import { createForm } from 'rc-form';
-import renderTag from '@/components/renderTag';
-import CommentItem from '@/components/CommentItem';
-import FollowButton from '@/components/FollowButton';
-import ArticleLikeButton from '@/components/ArticleLikeButton';
-import Separator from "@/components/Separator";
+import { Tag, CommentItem, FollowButton, ArticleLikeButton, Separator } from '@/components';
 import dayjs from 'dayjs';
 
 /**
@@ -74,8 +69,10 @@ const Article = function (props) {
     if (!articleComments) commentContent = <p style={{ color: 'red' }}>loading fail!</p>;
     else if (articleComments === 'loading') commentContent = 'loading...';
     else if (articleComments.length <= 0) commentContent = 'No Comments.';
-    else if (articleComments.length > 0) commentContent = articleComments.map(comment => <CommentItem key={comment.id} {...comment} />);
-    
+    else if (articleComments.length > 0) commentContent = articleComments.map(comment => {
+        return <CommentItem key={comment.id} article={articleDetail} {...comment} currentUserName={userInfo.username} onDelete={fetchAtriclComment}/>;
+    });
+
     // 是否为自己编辑
     const myArticle = userInfo ? userInfo.username === articleDetail.author.username : false;
 
@@ -99,7 +96,7 @@ const Article = function (props) {
                     }
                 </span>
             )}/>
-            
+
             <br />
             <b>Description: </b>{description}
 
@@ -115,7 +112,7 @@ const Article = function (props) {
             {tagList && tagList.length > 0 && <>
                 <br /><br />
                 <div className="flex-wrap">
-                    <b>Tag:</b> {tagList.map(renderTag)}
+                    <b>Tag:</b> {tagList.map(Tag)}
                 </div>
             </>}
 

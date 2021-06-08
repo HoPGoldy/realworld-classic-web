@@ -1,7 +1,6 @@
-import renderTag from '@/components/renderTag';
+import Tag from '@/components/Tag';
 import { Link } from 'react-router-dom';
 import ArticleLikeButton from '@/components/ArticleLikeButton';
-import '@/common.css';
 
 const FeedItem = function (props) {
     // console.log('🚀 ~ file: view.js ~ line 4 ~ FeedItem ~ props', props)
@@ -24,7 +23,7 @@ const FeedItem = function (props) {
                 <li><b>Update at:</b> {timeLabel}</li>
 
                 {tagList && tagList.length > 0 && <li className="flex-wrap">
-                    <b>Tag:</b> {tagList.map(renderTag)}
+                    <b>Tag:</b> {tagList.map(Tag)}
                 </li>}
             </ul>
 

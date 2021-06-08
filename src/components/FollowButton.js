@@ -1,5 +1,4 @@
-import api from '@/api';
-import '@/common.css';
+import api from '@/plugins/api';
 
 const FollowButton = function (props) {
     const { userInfo, onUserInfoChange } = props;

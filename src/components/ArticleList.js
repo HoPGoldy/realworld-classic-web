@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import api from '@/api';
-import FeedItem from '@/components/FeedItem/view';
+import api from '@/plugins/api';
+import FeedItem from '@/components/FeedItem';
 import Pagination from '@/components/Pagination';
 import dayjs from 'dayjs';
-import '@/common.css';
 
 /** 每页展示的文章数量 */
 const NUMBER_PER_PAGE = 10;

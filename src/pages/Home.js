@@ -1,12 +1,9 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import ArticleList from '@/components/ArticleList';
-import api from '@/api';
-import '@/common.css';
-import renderTag from '@/components/renderTag';
-import PageTitle from '@/components/PageTitle';
-import useLocation from '@/components/useLocation';
-import { userContext } from '@/components/userContext';
+import { ArticleList, Tag, PageTitle } from '@/components';
+import api from '@/plugins/api';
+import useLocation from '@/plugins/useLocation';
+import { userContext } from '@/plugins/userContext';
 
 const Home = function () {
     const [userInfo] = useContext(userContext);
@@ -33,7 +30,7 @@ const Home = function () {
             <nav>
                 <br />
                 <div className="flex-wrap">
-                    <b>Popular Tags: </b>{tags.map(renderTag)}
+                    <b>Popular Tags: </b>{tags.map(Tag)}
                 </div>
 
                 <br />
