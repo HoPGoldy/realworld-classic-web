@@ -1,5 +1,6 @@
 import axios from 'axios';
 import history from './history';
+import { useRequest as useAhooksRequest } from 'ahooks';
 
 export const setToken = newToken => {
     if (!newToken) delete axios.defaults.headers.common.authorization;
@@ -23,5 +24,12 @@ axios.interceptors.response.use(
         throw error;
     }
 );
+
+export const useRequest = function (service, options) {
+    return useAhooksRequest(service, {
+        ...options,
+        requestMethod: params => axios(params),
+    });
+}
 
 export default axios;

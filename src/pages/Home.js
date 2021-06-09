@@ -6,7 +6,7 @@ import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
 
 const Home = function () {
-    const [userInfo] = useContext(userContext);
+    const { userInfo } = useContext(userContext);
     const [tags, setTags] = useState([]);
     const location = useLocation();
     const { tag, page = 0, yourFeed } = location.query;
@@ -42,7 +42,7 @@ const Home = function () {
                 {userInfo && <Link to={`/home?yourFeed=1`}>Your Feed</Link>}
             </nav>
 
-            <ArticleList query={queryUrl} tag={tag} page={page}/>
+            <ArticleList url={queryUrl} tag={tag} page={page}/>
         </div>
     );
 }

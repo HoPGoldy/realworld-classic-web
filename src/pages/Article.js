@@ -1,7 +1,8 @@
 import { useParams, Link, useHistory } from 'react-router-dom';
 import PageTitle from '@/components/PageTitle';
-import api from '@/plugins/api';
-import { useState, useEffect, useContext } from 'react';
+import api, { useRequest } from '@/plugins/api';
+import { useContext } from 'react';
+import { useMount } from 'ahooks';
 import { userContext } from '@/plugins/userContext';
 import { createForm } from 'rc-form';
 import { Tag, CommentItem, FollowButton, ArticleLikeButton, Separator } from '@/components';
@@ -11,44 +12,41 @@ import dayjs from 'dayjs';
  * 文章正文页面
  */
 const Article = function (props) {
-    const { form: { getFieldProps, getFieldError } } = props;
+    const { form: { getFieldProps, getFieldError, setFieldsValue } } = props;
     const { id } = useParams();
-    const [articleDetail, setArticleDetail] = useState({});
-    const [articleComments, setArticleComments] = useState('loading');
-    const [userInfo] = useContext(userContext);
+    const { userInfo } = useContext(userContext);
     const history = useHistory();
 
-    const fetchArticleDetail = async () => {
-        const data = await api.get(`/articles/${id}`);
-        setArticleDetail(formatArticle(data.article));
-    }
-
-    const formatArticle = (article) => ({
+    const formatArticle = article => ({
         ...article,
         createTime: dayjs(article.createdAt).format('YYYY-MM-DD HH:mm:ss'),
         updateTime: dayjs(article.updatedAt).format('YYYY-MM-DD HH:mm:ss')
     })
 
-    const fetchAtriclComment = async () => {
-        const data = await api.get(`/articles/${id}/comments`);
+    const formatComment = comment => ({
+        ...comment,
+        createTime: dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')
+    })
 
-        const comments = data.comments.map(comment => ({
-            ...comment,
-            createTime: dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')
-        }));
+    const {
+        data: comments, loading: commentLoading, error: commentError, run: fetchAtriclComment
+    } = useRequest(`/articles/${id}/comments`, {
+        manual: true,
+        formatResult: data => data.comments.map(formatComment),
+        loadingDelay: 1000
+    });
 
-        setArticleComments(comments);
-    }
-
-    const onUserInfoChange = (author) => {
-        const newArticleDetail = { ...articleDetail, author };
-        setArticleDetail(newArticleDetail);
-    }
+    const {
+        data: article, loading: articleLoading, error: articleError, mutate: setArticle
+    } = useRequest(`/articles/${id}`, {
+        formatResult: data => formatArticle(data.article)
+    });
 
     const onSubmitComment = async () => {
         const comment = await props.form.validateFields();
-        await api.post(`/articles/${id}/comments`, { comment })
-        fetchAtriclComment()
+        await api.post(`/articles/${id}/comments`, { comment });
+        setFieldsValue({ body: '' });
+        fetchAtriclComment();
     }
 
     const onDelete = async () => {
@@ -56,25 +54,23 @@ const Article = function (props) {
         history.replace(`/user/${userInfo.username}`);
     }
 
-    useEffect(() => {
-        fetchArticleDetail();
-        fetchAtriclComment();
-    }, [id]);
+    useMount(fetchAtriclComment);
 
-    if (Object.keys(articleDetail).length <= 0) return <p>Loading...</p>;
+    if (articleLoading) return <p>Loading...</p>;
+    if (articleError) return <p style={{ color: 'red' }}>article loading fail!</p>;
 
-    const { title, description, createTime, updateTime, body, author, tagList } = articleDetail;
+    const { title, description, createTime, updateTime, body, author, tagList } = article;
 
     let commentContent;
-    if (!articleComments) commentContent = <p style={{ color: 'red' }}>loading fail!</p>;
-    else if (articleComments === 'loading') commentContent = 'loading...';
-    else if (articleComments.length <= 0) commentContent = 'No Comments.';
-    else if (articleComments.length > 0) commentContent = articleComments.map(comment => {
-        return <CommentItem key={comment.id} article={articleDetail} {...comment} currentUserName={userInfo.username} onDelete={fetchAtriclComment}/>;
+    if (commentError) commentContent = <p style={{ color: 'red' }}>comments loading fail!</p>;
+    else if (commentLoading) commentContent = 'loading...';
+    else if (comments.length <= 0) commentContent = 'No Comments.';
+    else if (comments.length > 0) commentContent = comments.map(comment => {
+        return <CommentItem key={comment.id} article={article} {...comment} currentUserName={userInfo.username} onDelete={fetchAtriclComment}/>;
     });
 
     // 是否为自己编辑
-    const myArticle = userInfo ? userInfo.username === articleDetail.author.username : false;
+    const myArticle = userInfo ? userInfo.username === article.author.username : false;
 
     return (
         <section>
@@ -89,9 +85,9 @@ const Article = function (props) {
                             <span className="link-btn" style={{ color: 'red' }} onClick={onDelete}>❌ Delete article</span>
                         </> :
                         <>
-                            <FollowButton userInfo={author} onUserInfoChange={onUserInfoChange} />
+                            <FollowButton userInfo={author} onUserInfoChange={author => setArticle({ ...article, author })} />
                             <Separator />
-                            <ArticleLikeButton article={articleDetail} onChange={detail => setArticleDetail(formatArticle(detail))}/>
+                            <ArticleLikeButton article={article} onChange={detail => setArticle(formatArticle(detail))} />
                         </>
                     }
                 </span>
@@ -127,6 +123,7 @@ const Article = function (props) {
                     style={{ height: '50px' }}
                 />
                 <span className="error">{getFieldError('body')}</span>
+                <br />
 
                 <button type="button" onClick={onSubmitComment}>Post Comment</button>
             </form>

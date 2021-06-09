@@ -12,7 +12,7 @@ const Profile = function (props) {
     const { form: { getFieldProps, getFieldError } } = props;
     const history = useHistory();
     const [errorMsg, setErrorMsg] = useState(undefined);
-    const [userInfo, setUserInfo] = useContext(userContext);
+    const { userInfo, setUserInfo } = useContext(userContext);
 
     const onSubmitComment = async () => {
         setErrorMsg(undefined);
@@ -100,7 +100,8 @@ const Profile = function (props) {
 
                 <button type="button" onClick={onSubmitComment}> Update Settings </button>
             </form>
-            <span class="link-btn" onClick={onLogout}>Or click here to logout.</span>
+            <span className="link-btn" onClick={onLogout}>Or click here to logout.</span>
+            <br /><br />
         </section>
     );
 }

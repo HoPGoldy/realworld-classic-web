@@ -34,7 +34,7 @@ form button {
     width: auto;
   }
   form input, form textarea {
-    width: fill-available;
+    width: stretch;
   }
 }
 

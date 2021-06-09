@@ -8,7 +8,7 @@ import api, { setToken } from '@/plugins/api';
 const Login = function (props) {
     const { form: { getFieldProps, getFieldError, resetFields } } = props;
     const [errorMsg, setErrorMsg] = useState(undefined);
-    const [setUserInfo] = useContext(userContext);
+    const { setUserInfo } = useContext(userContext);
     const history = useHistory();
     const location = useLocation();
 
@@ -50,7 +50,7 @@ const Login = function (props) {
     useEffect(() => {
         setErrorMsg([]);
         resetFields();
-    }, [location.pathname])
+    }, [location.pathname, resetFields]);
 
     const titleContent = isLoginPage() ?
         <PageTitle title="Sign in" summary={() => <Link to="/register">Need an account?</Link>}/> :
@@ -59,13 +59,14 @@ const Login = function (props) {
     return (
         <section>
             {titleContent}
-            
+
             <form>
                 <ApiError errorMsg={errorMsg} />
-                
+
                 {!isLoginPage() && renderField('Username', 'username')}
                 {renderField('Email', 'email')}
                 {renderField('Password', 'password', 'password')}
+                <br />
 
                 <button type="button" onClick={onSubmit}>
                     {isLoginPage() ? 'Sign in' : 'Sign up'}

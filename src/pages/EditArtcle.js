@@ -5,9 +5,9 @@ import { createForm } from 'rc-form';
 import { useEffect, useState } from 'react';
 
 /**
- * 文章正文页面
+ * 文章编辑 / 新增页面
  */
-const Article = function (props) {
+const EditArticle = function (props) {
     const { form: { getFieldProps, getFieldError } } = props;
     const [article, setArticle] = useState(undefined);
     const { id } = useParams();
@@ -113,4 +113,4 @@ const Article = function (props) {
     );
 }
 
-export default createForm()(Article);
+export default createForm()(EditArticle);

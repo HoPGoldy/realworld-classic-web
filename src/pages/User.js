@@ -6,18 +6,18 @@ import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
 import api from '@/plugins/api';
 
-const User = function () {
-    const TAB = [
-        { key: 'my', label: 'My Articles' },
-        { key: 'favorited', label: 'Favorited Articles' }
-    ]
+const TAB = [
+    { key: 'my', label: 'My Articles' },
+    { key: 'favorited', label: 'Favorited Articles' }
+]
 
+const User = function () {
     const { username, tab } = useParams();
     const [userInfo, setUserInfo] = useState({});
     const location = useLocation();
     const { page } = location.query;
     const history = useHistory();
-    const [selfInfo] = useContext(userContext);
+    const { userInfo: selfInfo } = useContext(userContext);
 
     useEffect(() => {    
         // 当前没有 tab 选中或者选中了未知的 tab，重定向
@@ -25,7 +25,7 @@ const User = function () {
             history.replace(`/user/${username}/${TAB[0].key}`);
             return 'Redirecting...';
         }
-    }, [tab]);
+    }, [tab, history, username]);
 
     useEffect(() => {
         const fetchUserInfo = async () => {

@@ -1,16 +1,17 @@
-import api from '@/plugins/api';
+import { useRequest } from '@/plugins/api';
 
 const ArticleLikeButton = function (props) {
     const { article: { favorited, favoritesCount, slug }, onChange } = props;
 
     const likeLabel = `${favorited ? '💗 liked' : '🤍 like'} ${favoritesCount}`;
 
-    const onClickLike = async () => {
-        const url = `/articles/${slug}/favorite`;
-
-        const data = favorited ? await api.delete(url) : await api.post(url);
-        onChange(data.article);
-    }
+    const { run: onClickLike } = useRequest({
+        method: favorited ? 'delete' : 'post',
+        url: `/articles/${slug}/favorite`
+    }, {
+        manual: true,
+        onSuccess: data => onChange(data.article)
+    });
 
     return (
         <span style={{ fontSize: 'medium' }} className="link-btn" onClick={onClickLike}>

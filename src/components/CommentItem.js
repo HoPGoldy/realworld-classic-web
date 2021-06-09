@@ -1,12 +1,14 @@
-import api from '@/plugins/api';
+import { useRequest } from '@/plugins/api';
 
 const CommentItem = function (props) {
     const { author, createTime, body, currentUserName, id, article: { slug }, onDelete } = props;
 
-    const onDeleteComment = async () => {
-        await api.delete(`/articles/${slug}/comments/${id}`)
-        onDelete();
-    }
+    const { run: onDeleteComment } = useRequest({
+        url: `/articles/${slug}/comments/${id}`, method: 'delete'
+    }, {
+        manual: true,
+        onSuccess: onDelete
+    })
 
     let deleteContent = null;
     if (currentUserName === author.username) {

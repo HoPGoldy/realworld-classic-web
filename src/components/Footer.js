@@ -1,6 +1,6 @@
 /** 全局通用页脚，所以只渲染一次 */
 export const footer = (
-    <p className="page-part">
+    <div className="page-part">
         <p className="flex-wrap flex-center">
             <b>Github:</b>
             &nbsp;
@@ -10,5 +10,5 @@ export const footer = (
             &nbsp;
             <a href="https://github.com/HoPGoldy" target="__blank">@HoPGoldy</a>
         </p>
-    </p>
+    </div>
 )

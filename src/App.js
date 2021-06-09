@@ -1,27 +1,27 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Home, Login, Article, User, EditArtcle, Profile } from "./pages";
 import { Route, Switch, Redirect, Link } from "react-router-dom";
 import { Separator, footer } from "@/components";
 import { userContext } from "@/plugins/userContext";
-import api, { setToken } from "@/plugins/api";
+import { setToken, useRequest } from "@/plugins/api";
+import { useMount } from 'ahooks';
 
 function App() {
-    const [userInfo, setUserInfo] = useContext(userContext);
+    const { userInfo, setUserInfo } = useContext(userContext);
 
-    // 如果本地有 token 的话，就尝试用其获取用户信息
-    useEffect(() => {
+    const { run: fetchUserInfo } = useRequest('user', {
+        manual: true,
+        onSuccess: data => setUserInfo(data?.user)
+    });
+
+    useMount(() => {
+        // 如果本地有 token 的话，就尝试用其获取用户信息
         const token = localStorage.getItem("token");
         if (!token) return;
 
         setToken(token);
-
-        const getUserInfo = async () => {
-            const data = await api.get("user");
-            setUserInfo(data?.user);
-        };
-
-        getUserInfo();
-    }, []);
+        fetchUserInfo();
+    });
 
     return (
         <div>
