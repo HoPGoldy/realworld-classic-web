@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import { PageTitle, ApiError } from '@/components';
-import api from '@/plugins/api';
+import { useRequest } from '@/plugins/api';
 import { createForm } from 'rc-form';
 import { useState, useContext } from 'react';
 import { userContext } from '@/plugins/userContext';
@@ -14,19 +14,23 @@ const Profile = function (props) {
     const [errorMsg, setErrorMsg] = useState(undefined);
     const { userInfo, setUserInfo } = useContext(userContext);
 
-    const onSubmitComment = async () => {
+    const { run: postSetting } = useRequest(user => ({ url: '/user', method: 'put', data: { user } }), {
+        manual: true,
+        onSuccess: ({ user }) => {
+            setUserInfo(user);
+            localStorage.setItem('token', user.token);
+            history.push(`/user/${user.username}`);
+        },
+        onError: ({ response }) => {
+            console.error(response.data.errors);
+            setErrorMsg(response.data.errors);
+        }
+    })
+
+    const onSubmitSetting = async () => {
         setErrorMsg(undefined);
         const user = await props.form.validateFields();
-        try {
-            const data = await api.put('/user', { user });
-            setUserInfo(data.user);
-            localStorage.setItem('token', data.user.token);
-            history.push(`/user/${data.user.username}`);
-        }
-        catch (e) {
-            console.error(e.response.data.errors);
-            setErrorMsg(e.response.data.errors);
-        }
+        postSetting(user);
     }
 
     const onLogout = () => {
@@ -48,7 +52,7 @@ const Profile = function (props) {
                     <input
                         type="text"
                         placeholder="URL of profile picture"
-                        {...getFieldProps('image', { initialValue: userInfo.image | '' })}
+                        {...getFieldProps('image', { initialValue: userInfo.image || '' })}
                     />
                 </label>
                 <span className="error">{getFieldError('image')}</span>
@@ -98,7 +102,7 @@ const Profile = function (props) {
                 <span className="error">{getFieldError('password')}</span>
                 <br />
 
-                <button type="button" onClick={onSubmitComment}> Update Settings </button>
+                <button type="button" onClick={onSubmitSetting}> Update Settings </button>
             </form>
             <span className="link-btn" onClick={onLogout}>Or click here to logout.</span>
             <br /><br />

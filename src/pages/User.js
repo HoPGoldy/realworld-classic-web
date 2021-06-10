@@ -1,10 +1,10 @@
 
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { PageTitle, ArticleList, FollowButton, Separator } from '@/components';
 import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
-import api from '@/plugins/api';
+import { useRequest } from '@/plugins/api';
 
 const TAB = [
     { key: 'my', label: 'My Articles' },
@@ -13,7 +13,6 @@ const TAB = [
 
 const User = function () {
     const { username, tab } = useParams();
-    const [userInfo, setUserInfo] = useState({});
     const location = useLocation();
     const { page } = location.query;
     const history = useHistory();
@@ -27,14 +26,9 @@ const User = function () {
         }
     }, [tab, history, username]);
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            const data = await api.get(`/profiles/${username}`)
-            setUserInfo(data.profile)
-        }
-
-        fetchUserInfo();
-    }, [username]);
+    const { data: userInfo = [], mutate: setUserInfo } = useRequest(`/profiles/${username}`, {
+        formatResult: data => data.profile
+    });
 
     // 是否为自己编辑
     const isMyself = selfInfo ? selfInfo.username === username : undefined;

@@ -56,7 +56,7 @@ const Article = function (props) {
 
     useMount(fetchAtriclComment);
 
-    if (articleLoading) return <p>Loading...</p>;
+    if (articleLoading || !userInfo) return <p>Loading...</p>;
     if (articleError) return <p style={{ color: 'red' }}>article loading fail!</p>;
 
     const { title, description, createTime, updateTime, body, author, tagList } = article;

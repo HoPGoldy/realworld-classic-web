@@ -1,39 +1,36 @@
 import { useParams, useHistory } from 'react-router-dom';
 import { PageTitle, ApiError } from '@/components';
-import api from '@/plugins/api';
+import api, { useRequest } from '@/plugins/api';
 import { createForm } from 'rc-form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useMount } from 'ahooks';
 
 /**
  * 文章编辑 / 新增页面
  */
 const EditArticle = function (props) {
     const { form: { getFieldProps, getFieldError } } = props;
-    const [article, setArticle] = useState(undefined);
     const { id } = useParams();
     const history = useHistory();
     const [errorMsg, setErrorMsg] = useState(undefined);
 
-    useEffect(() => {
-        const fetchArticle = async () => {
-            const data = await api.get(`/articles/${id}`);
+    const { data: article = {}, loading, run: fetchArticle, mutate: setArticle } = useRequest(`/articles/${id}`, {
+        manual: true,
+        formatResult: data => ({
+            ...data.article,
+            tag: data.article.tagList.join(',')
+        })
+    });
 
-            setArticle({
-                ...data.article,
-                tag: data.article.tagList.join(',')
-            });
-        }
-
+    useMount(() => {
         if (id) fetchArticle();
-        else {
-            setArticle({
-                title: '',
-                description: '',
-                body: '',
-                tag: ''
-            });
-        }
-    }, [id]);
+        else setArticle({
+            title: '',
+            description: '',
+            body: '',
+            tag: ''
+        });
+    });
 
     const onSubmitComment = async () => {
         const formData = await props.form.validateFields();
@@ -54,7 +51,7 @@ const EditArticle = function (props) {
         }
     }
 
-    if (!article) return 'loading...';
+    if (loading) return 'loading...';
 
     return (
         <section>

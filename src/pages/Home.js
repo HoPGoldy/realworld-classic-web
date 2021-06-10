@@ -1,27 +1,20 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { ArticleList, Tag, PageTitle } from '@/components';
-import api from '@/plugins/api';
+import { useRequest } from '@/plugins/api';
 import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
 
 const Home = function () {
     const { userInfo } = useContext(userContext);
-    const [tags, setTags] = useState([]);
     const location = useLocation();
     const { tag, page = 0, yourFeed } = location.query;
 
-    const fetchTags = async () => {
-        const data = await api.get('/tags');
-        if (!data) return;
-        setTags(data.tags);
-    }
+    const { data: tags = [] } = useRequest('/tags', {
+        formatResult: data => data.tags
+    });
 
     const queryUrl = (userInfo && yourFeed) ? '/articles/feed' : '/articles';
-
-    useEffect(() => {
-        fetchTags();
-    }, []);
 
     return (
         <div>
