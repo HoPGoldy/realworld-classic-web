@@ -10,10 +10,13 @@ import { useMount } from 'ahooks';
  */
 const EditArticle = function (props) {
     const { form: { getFieldProps, getFieldError } } = props;
+    // 当前编辑的文章 id，为空代表新增
     const { id } = useParams();
     const history = useHistory();
+    // 文章编辑的后端校验报错
     const [errorMsg, setErrorMsg] = useState(undefined);
 
+    // 请求 - 获取文章正文
     const { data: article = {}, loading, run: fetchArticle, mutate: setArticle } = useRequest(`/articles/${id}`, {
         manual: true,
         formatResult: data => ({
@@ -23,6 +26,7 @@ const EditArticle = function (props) {
     });
 
     useMount(() => {
+        // 挂载时有文章 id 就进行加载，否则加载默认空
         if (id) fetchArticle();
         else setArticle({
             title: '',
@@ -32,7 +36,8 @@ const EditArticle = function (props) {
         });
     });
 
-    const onSubmitComment = async () => {
+    // 回调 - 提交文章内容
+    const onSubmit = async () => {
         const formData = await props.form.validateFields();
 
         const article = {
@@ -104,7 +109,7 @@ const EditArticle = function (props) {
                 <span className="error">{getFieldError('tag')}</span>
                 <br />
 
-                <button type="button" onClick={onSubmitComment}> Publish Article </button>
+                <button type="button" onClick={onSubmit}> Publish Article </button>
             </form>
         </section>
     );

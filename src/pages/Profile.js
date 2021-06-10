@@ -1,41 +1,48 @@
 import { useHistory } from 'react-router-dom';
 import { PageTitle, ApiError } from '@/components';
-import { useRequest } from '@/plugins/api';
+import { useRequest, setToken } from '@/plugins/api';
 import { createForm } from 'rc-form';
 import { useState, useContext } from 'react';
 import { userContext } from '@/plugins/userContext';
 
 /**
- * 文章正文页面
+ * 用户设置页面
  */
 const Profile = function (props) {
     const { form: { getFieldProps, getFieldError } } = props;
     const history = useHistory();
+    // 后端校验错误信息
     const [errorMsg, setErrorMsg] = useState(undefined);
     const { userInfo, setUserInfo } = useContext(userContext);
 
+    // 请求 - 上传新的用户配置
     const { run: postSetting } = useRequest(user => ({ url: '/user', method: 'put', data: { user } }), {
         manual: true,
+        // 成功之后把信息更新到本地
         onSuccess: ({ user }) => {
             setUserInfo(user);
             localStorage.setItem('token', user.token);
             history.push(`/user/${user.username}`);
         },
+        // 失败之后显示报错信息
         onError: ({ response }) => {
             console.error(response.data.errors);
             setErrorMsg(response.data.errors);
         }
     })
 
+    // 回调 - 点击提交请求按钮
     const onSubmitSetting = async () => {
         setErrorMsg(undefined);
         const user = await props.form.validateFields();
         postSetting(user);
     }
 
+    // 回调 - 点击登出按钮
     const onLogout = () => {
         localStorage.removeItem('token');
         setUserInfo(undefined);
+        setToken(undefined);
         history.push('/home');
     }
 

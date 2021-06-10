@@ -5,15 +5,17 @@ import { useRequest } from '@/plugins/api';
 import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
 
+/**
+ * 入口首页
+ */
 const Home = function () {
     const { userInfo } = useContext(userContext);
     const location = useLocation();
     const { tag, page = 0, yourFeed } = location.query;
 
-    const { data: tags = [] } = useRequest('/tags', {
-        formatResult: data => data.tags
-    });
-
+    // 获取热门标签信息
+    const { data: tags = [] } = useRequest('/tags', { formatResult: data => data.tags });
+    // 根据当前选择的 tab 页确定要查询的接口
     const queryUrl = (userInfo && yourFeed) ? '/articles/feed' : '/articles';
 
     return (
@@ -32,6 +34,7 @@ const Home = function () {
                 {tag && (<>
                     <Link to={`/home?tag=${tag}`}>#{tag}</Link>&nbsp;&nbsp;
                 </>)}
+                {/* 登录之后再显示该标签页 */}
                 {userInfo && <Link to={`/home?yourFeed=1`}>Your Feed</Link>}
             </nav>
 

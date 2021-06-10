@@ -6,11 +6,15 @@ import useLocation from '@/plugins/useLocation';
 import { userContext } from '@/plugins/userContext';
 import { useRequest } from '@/plugins/api';
 
+// 用户的两个标签页
 const TAB = [
     { key: 'my', label: 'My Articles' },
     { key: 'favorited', label: 'Favorited Articles' }
 ]
 
+/**
+ * 用户信息页面
+ */
 const User = function () {
     const { username, tab } = useParams();
     const location = useLocation();
@@ -26,11 +30,12 @@ const User = function () {
         }
     }, [tab, history, username]);
 
+    // 请求 - 获取用户信息
     const { data: userInfo = [], mutate: setUserInfo } = useRequest(`/profiles/${username}`, {
         formatResult: data => data.profile
     });
 
-    // 是否为自己编辑
+    // 该用户是否为自己
     const isMyself = selfInfo ? selfInfo.username === username : undefined;
 
     return (

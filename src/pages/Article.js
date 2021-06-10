@@ -13,9 +13,11 @@ import dayjs from 'dayjs';
  */
 const Article = function (props) {
     const { form: { getFieldProps, getFieldError, setFieldsValue } } = props;
-    const { id } = useParams();
-    const { userInfo } = useContext(userContext);
     const history = useHistory();
+    // 当前文章 id
+    const { id } = useParams();
+    // 当前用户信息
+    const { userInfo } = useContext(userContext);
 
     const formatArticle = article => ({
         ...article,
@@ -28,45 +30,54 @@ const Article = function (props) {
         createTime: dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm:ss')
     })
 
+    // 接口 - 获取评论
     const {
-        data: comments, loading: commentLoading, error: commentError, run: fetchAtriclComment
+        data: comments = [], loading: commentLoading, error: commentError, run: fetchAtriclComment
     } = useRequest(`/articles/${id}/comments`, {
         manual: true,
         formatResult: data => data.comments.map(formatComment),
         loadingDelay: 1000
     });
 
+    // 接口 - 获取文章详情
     const {
         data: article, loading: articleLoading, error: articleError, mutate: setArticle
     } = useRequest(`/articles/${id}`, {
         formatResult: data => formatArticle(data.article)
     });
 
+    // 回调 - 提交评论
     const onSubmitComment = async () => {
         const comment = await props.form.validateFields();
         await api.post(`/articles/${id}/comments`, { comment });
+        // 提交成功后清空输入框并重新加载评论
         setFieldsValue({ body: '' });
         fetchAtriclComment();
     }
 
+    // 回调 -删除文章
     const onDelete = async () => {
         await api.delete(`/articles/${id}`);
+        // 删除成功后返回用户页面
         history.replace(`/user/${userInfo.username}`);
     }
 
     useMount(fetchAtriclComment);
 
-    if (articleLoading || !userInfo) return <p>Loading...</p>;
+    // 载入校验
+    if (articleLoading) return <p>Loading...</p>;
     if (articleError) return <p style={{ color: 'red' }}>article loading fail!</p>;
 
     const { title, description, createTime, updateTime, body, author, tagList } = article;
 
+    // 评论载入校验
     let commentContent;
     if (commentError) commentContent = <p style={{ color: 'red' }}>comments loading fail!</p>;
     else if (commentLoading) commentContent = 'loading...';
     else if (comments.length <= 0) commentContent = 'No Comments.';
     else if (comments.length > 0) commentContent = comments.map(comment => {
-        return <CommentItem key={comment.id} article={article} {...comment} currentUserName={userInfo.username} onDelete={fetchAtriclComment}/>;
+        // 给评论传入当前用户信息，用于比对是否显示评论删除按钮
+        return <CommentItem key={comment.id} article={article} {...comment} currentUserName={userInfo?.username} onDelete={fetchAtriclComment}/>;
     });
 
     // 是否为自己编辑
