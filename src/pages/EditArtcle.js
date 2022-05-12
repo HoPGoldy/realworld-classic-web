@@ -92,7 +92,7 @@ const EditArticle = function (props) {
                     <textarea
                         placeholder="Write your article (in markdown)"
                         {...getFieldProps('body', { rules: [{ required: true }], initialValue: article.body })}
-                        style={{ height: '50px' }}
+                        style={{ height: '100px' }}
                     />
                 </label>
                 <span className="error">{getFieldError('body')}</span>

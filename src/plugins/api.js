@@ -11,7 +11,7 @@ export const setToken = newToken => {
 }
 
 // 后端地址
-axios.defaults.baseURL = 'https://conduit.productionready.io/api/';
+axios.defaults.baseURL = 'https://api.realworld.io/api';
 
 axios.interceptors.response.use(
     resp => resp.data,

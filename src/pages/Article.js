@@ -131,7 +131,7 @@ const Article = function (props) {
                 <textarea
                     placeholder="type your comment here."
                     {...getFieldProps('body', { rules: [{ required: true }], initialValue: '' })}
-                    style={{ height: '50px' }}
+                    style={{ height: '100px' }}
                 />
                 <span className="error">{getFieldError('body')}</span>
                 <br />
