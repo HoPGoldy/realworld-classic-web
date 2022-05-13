@@ -22,7 +22,7 @@ const FeedItem = function (props) {
                 <li><b>Update at:</b> {timeLabel}</li>
 
                 {/* 标签列表 */}
-                {tagList && tagList.length > 0 && <li className="flex-wrap">
+                {tagList && tagList.length > 0 && <li>
                     <b>Tag:</b> {tagList.map(Tag)}
                 </li>}
             </ul>
