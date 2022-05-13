@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/realworld-classic-web/static/css/main.cea0f376.chunk.css",
+    "main.js": "/realworld-classic-web/static/js/main.f5f034fb.chunk.js",
+    "main.js.map": "/realworld-classic-web/static/js/main.f5f034fb.chunk.js.map",
+    "runtime-main.js": "/realworld-classic-web/static/js/runtime-main.d8a71512.js",
+    "runtime-main.js.map": "/realworld-classic-web/static/js/runtime-main.d8a71512.js.map",
+    "static/js/2.ec5d24d3.chunk.js": "/realworld-classic-web/static/js/2.ec5d24d3.chunk.js",
+    "static/js/2.ec5d24d3.chunk.js.map": "/realworld-classic-web/static/js/2.ec5d24d3.chunk.js.map",
+    "index.html": "/realworld-classic-web/index.html",
+    "static/css/main.cea0f376.chunk.css.map": "/realworld-classic-web/static/css/main.cea0f376.chunk.css.map",
+    "static/js/2.ec5d24d3.chunk.js.LICENSE.txt": "/realworld-classic-web/static/js/2.ec5d24d3.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d8a71512.js",
+    "static/js/2.ec5d24d3.chunk.js",
+    "static/css/main.cea0f376.chunk.css",
+    "static/js/main.f5f034fb.chunk.js"
+  ]
+}
