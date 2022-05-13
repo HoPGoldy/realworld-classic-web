@@ -1,6 +1,6 @@
 # realworld-classic-web
 
-早期 web 风格的 realworld 实现，基于 react。
+早期 web 风格的 realworld 实现，基于 react 开发，在线预览地址：[realworld-classic-web](https://hopgoldy.github.io/realworld-classic-web/)。
 
 ## 启动
 

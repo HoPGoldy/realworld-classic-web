@@ -1,6 +1,6 @@
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 
-const history = createBrowserHistory();
+const history = createHashHistory();
 
 /**
  * 根据当前页面状态跳转页面标题

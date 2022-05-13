@@ -2,6 +2,7 @@
   "name": "realworld-classic-web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/realworld-classic-web",
   "dependencies": {
     "@ahooksjs/use-url-state": "^2.5.7",
     "@babel/core": "7.12.3",
